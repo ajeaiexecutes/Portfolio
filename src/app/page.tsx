@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence, useScroll, useTransform, Variants } from 'framer-motion';
+import { motion, AnimatePresence, useScroll, useTransform, Variants, useMotionValueEvent } from 'framer-motion';
 import { ReactLenis } from 'lenis/react';
 import { ArrowUpRight, Mail, Phone, ExternalLink, Code2, X, Star, ChevronLeft, Menu, MessageCircle } from 'lucide-react';
 
@@ -106,12 +106,17 @@ const skills = [
 export default function Portfolio() {
   const [selectedProject, setSelectedProject] = useState<string | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
 
   // Parallax setup for Hero
   const { scrollY } = useScroll();
   const y1 = useTransform(scrollY, [0, 1000], [0, 200]);
   const y2 = useTransform(scrollY, [0, 1000], [0, -100]);
   const opacity = useTransform(scrollY, [0, 500], [1, 0]);
+
+  useMotionValueEvent(scrollY, "change", (latest) => {
+    setIsScrolled(latest > 50);
+  });
 
 
 
@@ -146,7 +151,11 @@ export default function Portfolio() {
             {/* Floating Navigation */}
             <div className="fixed top-6 left-0 right-0 z-40 px-6 pointer-events-none">
               <div className="max-w-4xl mx-auto pointer-events-auto relative">
-                <nav className="glass-nav rounded-full px-6 py-4 flex justify-between items-center transition-all duration-300 relative z-50">
+                <nav className={`rounded-full px-6 flex justify-between items-center transition-all duration-500 relative z-50 backdrop-blur-2xl border ${
+                  isScrolled 
+                    ? 'py-3 bg-white/95 border-[#E2E8F0] shadow-[0_8px_30px_rgb(0,0,0,0.08)]' 
+                    : 'py-5 bg-white/40 border-white/60 shadow-sm'
+                }`}>
                   <a href="#" onClick={(e) => { e.preventDefault(); window.scrollTo(0,0); setIsMobileMenuOpen(false); }} className="text-xl font-extrabold font-display tracking-tight text-[#0F172A] flex items-center gap-2">
                     <span className="w-2.5 h-2.5 rounded-full bg-[#2B59FF]"></span>
                     AJAY M B.
