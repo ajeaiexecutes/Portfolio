@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
+import { motion, AnimatePresence, useScroll, useTransform, Variants } from 'framer-motion';
 import { ReactLenis } from 'lenis/react';
 import { ArrowUpRight, Mail, Phone, ExternalLink, Code2, X, Star, ChevronLeft } from 'lucide-react';
 
@@ -117,12 +117,12 @@ export default function Portfolio() {
     window.scrollTo(0, 0);
   }, [selectedProject]);
 
-  const fadeInUp = {
+  const fadeInUp: Variants = {
     hidden: { opacity: 0, y: 40 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } }
   };
 
-  const staggerContainer = {
+  const staggerContainer: Variants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
