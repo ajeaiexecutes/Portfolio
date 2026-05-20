@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
-import { ReactLenis } from '@studio-freight/react-lenis';
+import { ReactLenis } from 'lenis/react';
 import { ArrowUpRight, Mail, Phone, ExternalLink, Code2, X, Star, ChevronLeft } from 'lucide-react';
 
 const Github = ({ size = 24, className = "" }: { size?: number, className?: string }) => (
