@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence, useScroll, useTransform, Variants } from 'framer-motion';
 import { ReactLenis } from 'lenis/react';
-import { ArrowUpRight, Mail, Phone, ExternalLink, Code2, X, Star, ChevronLeft } from 'lucide-react';
+import { ArrowUpRight, Mail, Phone, ExternalLink, Code2, X, Star, ChevronLeft, Menu, MessageCircle } from 'lucide-react';
 
 const Github = ({ size = 24, className = "" }: { size?: number, className?: string }) => (
   <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
@@ -105,6 +105,7 @@ const skills = [
 
 export default function Portfolio() {
   const [selectedProject, setSelectedProject] = useState<string | null>(null);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   // Parallax setup for Hero
   const { scrollY } = useScroll();
@@ -112,10 +113,7 @@ export default function Portfolio() {
   const y2 = useTransform(scrollY, [0, 1000], [0, -100]);
   const opacity = useTransform(scrollY, [0, 500], [1, 0]);
 
-  // Scroll to top when project is selected or deselected
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [selectedProject]);
+
 
   const fadeInUp: Variants = {
     hidden: { opacity: 0, y: 40 },
@@ -143,12 +141,13 @@ export default function Portfolio() {
             exit={{ opacity: 0, scale: 0.98 }}
             transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
             className="min-h-screen bg-mesh"
+            onAnimationStart={() => window.scrollTo(0, 0)}
           >
             {/* Floating Navigation */}
             <div className="fixed top-6 left-0 right-0 z-40 px-6 pointer-events-none">
-              <div className="max-w-4xl mx-auto pointer-events-auto">
-                <nav className="glass-nav rounded-full px-6 py-4 flex justify-between items-center transition-all duration-300">
-                  <a href="#" onClick={(e) => { e.preventDefault(); window.scrollTo(0,0); }} className="text-xl font-extrabold font-display tracking-tight text-[#0F172A] flex items-center gap-2">
+              <div className="max-w-4xl mx-auto pointer-events-auto relative">
+                <nav className="glass-nav rounded-full px-6 py-4 flex justify-between items-center transition-all duration-300 relative z-50">
+                  <a href="#" onClick={(e) => { e.preventDefault(); window.scrollTo(0,0); setIsMobileMenuOpen(false); }} className="text-xl font-extrabold font-display tracking-tight text-[#0F172A] flex items-center gap-2">
                     <span className="w-2.5 h-2.5 rounded-full bg-[#2B59FF]"></span>
                     AJAY M B.
                   </a>
@@ -169,7 +168,46 @@ export default function Portfolio() {
                   >
                     Let's Talk <ArrowUpRight size={16} strokeWidth={2.5} />
                   </a>
+                  <button 
+                    className="md:hidden p-2 text-[#0F172A] bg-[#FAFAFA] rounded-full shadow-sm border border-[#E2E8F0]"
+                    onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                  >
+                    {isMobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+                  </button>
                 </nav>
+
+                {/* Mobile Menu Dropdown */}
+                <AnimatePresence>
+                  {isMobileMenuOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -20, scale: 0.95 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: -20, scale: 0.95 }}
+                      transition={{ duration: 0.2 }}
+                      className="absolute top-[calc(100%+1rem)] left-0 right-0 p-6 bg-white/95 backdrop-blur-2xl rounded-3xl flex flex-col gap-6 shadow-2xl border border-[#E2E8F0] md:hidden"
+                    >
+                      <div className="flex flex-col gap-4">
+                        {['About', 'Projects', 'Contact'].map((item) => (
+                          <a
+                            key={item}
+                            href={`#${item.toLowerCase()}`}
+                            onClick={() => setIsMobileMenuOpen(false)}
+                            className="text-lg font-bold text-[#0F172A] uppercase tracking-wide flex items-center justify-between border-b border-[#E2E8F0]/50 pb-4"
+                          >
+                            {item} <ArrowUpRight size={16} className="text-[#64748B]" />
+                          </a>
+                        ))}
+                      </div>
+                      <a
+                        href="mailto:ajaymb.webdeveloper@gmail.com"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                        className="flex justify-center px-6 py-4 bg-[#2B59FF] text-white rounded-full text-sm font-bold uppercase tracking-widest items-center gap-2 shadow-lg shadow-blue-500/30"
+                      >
+                        Let's Talk <ArrowUpRight size={16} strokeWidth={2.5} />
+                      </a>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
             </div>
 
@@ -197,7 +235,7 @@ export default function Portfolio() {
                     </div>
                   </motion.div>
                   
-                  <motion.h1 variants={fadeInUp} className="text-6xl md:text-8xl lg:text-[7rem] xl:text-[8rem] font-extrabold font-display tracking-tight leading-[0.95] text-[#0F172A] mb-10 drop-shadow-sm uppercase">
+                  <motion.h1 variants={fadeInUp} className="text-4xl sm:text-6xl md:text-8xl lg:text-[7rem] xl:text-[8rem] font-extrabold font-display tracking-tight leading-[0.95] text-[#0F172A] mb-10 drop-shadow-sm uppercase">
                     AJAY M B <br />
                     <span className="text-gradient">MERN STACK</span><br />
                     DEVELOPER
@@ -235,7 +273,7 @@ export default function Portfolio() {
               </section>
 
               {/* About Section */}
-              <section id="about" className="py-32 md:py-48 px-6 relative z-10">
+              <section id="about" className="py-20 sm:py-32 md:py-48 px-6 relative z-10">
                 <div className="max-w-6xl mx-auto">
                   <motion.div 
                     initial="hidden"
@@ -307,7 +345,7 @@ export default function Portfolio() {
               </section>
 
               {/* Projects Section */}
-              <section id="projects" className="py-32 md:py-40 px-6 bg-white relative">
+              <section id="projects" className="py-20 sm:py-32 md:py-40 px-6 bg-white relative">
                 <div className="max-w-6xl mx-auto">
                   <motion.div
                     initial="hidden"
@@ -317,7 +355,7 @@ export default function Portfolio() {
                     className="mb-20 md:mb-32 text-center"
                   >
                     <span className="text-[#2B59FF] font-bold tracking-widest uppercase text-sm mb-4 block">Selected Work</span>
-                    <h2 className="text-5xl md:text-7xl font-extrabold font-display tracking-tight text-[#0F172A]">
+                    <h2 className="text-4xl sm:text-5xl md:text-7xl font-extrabold font-display tracking-tight text-[#0F172A]">
                       Recent Projects
                     </h2>
                   </motion.div>
@@ -402,7 +440,7 @@ export default function Portfolio() {
               </section>
 
               {/* Contact Section */}
-              <section id="contact" className="py-32 md:py-48 px-6 bg-[#FAFAFA] text-center relative overflow-hidden">
+              <section id="contact" className="py-20 sm:py-32 md:py-48 px-6 bg-[#FAFAFA] text-center relative overflow-hidden">
                 <motion.div 
                   className="relative z-10 max-w-4xl mx-auto"
                   initial="hidden"
@@ -415,15 +453,28 @@ export default function Portfolio() {
                       Got a project?
                     </span>
                   </motion.div>
-                  <motion.h2 variants={fadeInUp} className="text-5xl md:text-7xl lg:text-8xl font-extrabold font-display text-[#0F172A] mb-12 tracking-tight">
+                  <motion.h2 variants={fadeInUp} className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-extrabold font-display text-[#0F172A] mb-12 tracking-tight">
                     LET'S ROCK <span className="font-light text-[#2B59FF] italic font-serif">&amp;</span> ROLL
                   </motion.h2>
-                  <motion.div variants={fadeInUp} className="flex flex-col sm:flex-row gap-6 justify-center">
+                  <motion.div variants={fadeInUp} className="flex flex-col sm:flex-row flex-wrap gap-4 justify-center items-center">
                     <a
                       href="mailto:ajaymb.webdeveloper@gmail.com"
-                      className="px-8 py-4 bg-[#2B59FF] text-white rounded-full font-bold uppercase tracking-widest hover:scale-105 transition-all flex items-center justify-center gap-3 shadow-xl shadow-[#2B59FF]/30"
+                      className="w-full sm:w-auto px-8 py-4 bg-[#2B59FF] text-white rounded-full font-bold uppercase tracking-widest hover:scale-105 transition-all flex items-center justify-center gap-3 shadow-xl shadow-[#2B59FF]/30"
                     >
-                      Start a Conversation <ArrowUpRight size={20} strokeWidth={3} />
+                      Email <Mail size={18} strokeWidth={2.5} />
+                    </a>
+                    <a
+                      href="tel:+919656240315"
+                      className="w-full sm:w-auto px-8 py-4 bg-white border border-[#E2E8F0] text-[#0F172A] rounded-full font-bold uppercase tracking-widest hover:scale-105 transition-all flex items-center justify-center gap-3 shadow-sm hover:shadow-md"
+                    >
+                      Call Me <Phone size={18} strokeWidth={2.5} />
+                    </a>
+                    <a
+                      href="https://wa.me/919656240315"
+                      target="_blank" rel="noopener noreferrer"
+                      className="w-full sm:w-auto px-8 py-4 bg-[#25D366] text-white rounded-full font-bold uppercase tracking-widest hover:scale-105 transition-all flex items-center justify-center gap-3 shadow-xl shadow-[#25D366]/30"
+                    >
+                      WhatsApp <MessageCircle size={18} strokeWidth={2.5} />
                     </a>
                   </motion.div>
                 </motion.div>
@@ -455,6 +506,7 @@ export default function Portfolio() {
             exit={{ opacity: 0, scale: 0.98 }}
             transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
             className="min-h-screen bg-[#FAFAFA] relative z-50"
+            onAnimationStart={() => window.scrollTo(0, 0)}
           >
             {/* Sticky Header inside Overlay */}
             <div className="sticky top-0 z-20 bg-[#FAFAFA]/80 backdrop-blur-xl border-b border-[#E2E8F0] px-6 py-4 md:py-6 flex justify-between items-center">
@@ -464,13 +516,13 @@ export default function Portfolio() {
               </span>
               <button
                 onClick={() => setSelectedProject(null)}
-                className="flex items-center gap-2 px-6 py-2.5 bg-white border border-[#E2E8F0] rounded-full text-[#0F172A] hover:bg-[#F1F5F9] hover:scale-105 transition-all font-bold text-xs uppercase tracking-widest shadow-sm"
+                className="flex items-center gap-1 md:gap-2 px-4 md:px-6 py-2 md:py-2.5 bg-white border border-[#E2E8F0] rounded-full text-[#0F172A] hover:bg-[#F1F5F9] hover:scale-105 transition-all font-bold text-[10px] md:text-xs uppercase tracking-widest shadow-sm"
               >
-                <ChevronLeft size={16} strokeWidth={2.5} /> Back to Work
+                <ChevronLeft size={16} strokeWidth={2.5} /> <span className="hidden sm:inline">Back to Work</span><span className="sm:hidden">Back</span>
               </button>
             </div>
 
-            <div className="max-w-4xl mx-auto px-6 py-16 md:py-24 relative z-10">
+            <div className="max-w-4xl mx-auto px-6 py-12 sm:py-16 md:py-24 relative z-10">
               {activeProject.image && (
                 <div className="w-full aspect-video md:aspect-[21/9] rounded-[2rem] overflow-hidden mb-12 shadow-2xl relative">
                   <img src={activeProject.image} alt={activeProject.name} className="absolute inset-0 w-full h-full object-cover" />
@@ -480,7 +532,7 @@ export default function Portfolio() {
                 <span className="inline-block px-4 py-2 rounded-full bg-[#2B59FF]/10 text-[#2B59FF] font-bold tracking-widest uppercase text-xs mb-8">
                   {activeProject.tagline}
                 </span>
-                <h2 className="text-6xl md:text-8xl font-extrabold font-display text-[#0F172A] mb-8 tracking-tight">{activeProject.name}</h2>
+                <h2 className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-extrabold font-display text-[#0F172A] mb-8 tracking-tight">{activeProject.name}</h2>
                 <p className="text-xl md:text-2xl text-[#64748B] font-medium leading-relaxed mb-12 max-w-3xl mx-auto md:mx-0">
                   {activeProject.description}
                 </p>
