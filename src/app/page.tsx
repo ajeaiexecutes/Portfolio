@@ -28,7 +28,7 @@ const projects = [
     description: 'A full-stack influencer marketplace platform enabling service booking with real-time slot management, payment processing, and multi-role authentication.',
     link: 'https://noillin.in/',
     github: '#',
-    status: 'In Progress',
+    status: 'Live',
     tech: ['Next.js', 'Node.js', 'MongoDB', 'Redis', 'Socket.io', 'Meilisearch', 'Stripe', 'TypeScript'],
     highlights: [
       'Designed complete booking flow with Redis-based slot locking to prevent double-bookings',
